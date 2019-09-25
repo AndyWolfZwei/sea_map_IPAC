@@ -1,0 +1,138 @@
+    .show_info
+    {
+		margin-left: -25px;
+     }
+
+   .show_info input
+     {
+         width:75%;
+         margin: 20px 0px;
+     }
+
+.director{
+	width:204px;
+	height:204px;
+	/*border:2px solid #C96;*/
+    margin-top: 20%;
+    margin-left: 15%;
+    float: left;
+}
+
+.piece_lu{
+    background: url(../img/direction.png) no-repeat;
+    width: 34%;
+    height: 50%;
+    float: left;
+    background-position: -5% -0.4%;
+}
+.piece_lu-hover
+{
+	 background:url(../img/direction.png) no-repeat;
+    width: 34%;
+    height: 50%;
+    float: left;
+    background-position: -7% 66%;
+}
+.piece_u
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 31%;
+    height: 31%;
+    float: left;
+    background-position: 46% 0%;
+}
+.piece_u-hover
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 31%;
+    height: 31%;
+    float: left;
+    background-position: 46% 59.2%;
+}
+.piece_ru
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 32.06%;
+    height: 50%;
+    float: left;
+    background-position: 92.4% -0.9%;
+}
+.piece_ru-hover
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 32.06%;
+    height: 50%;
+    float: left;
+    background-position: 92.4% 66%;
+}
+
+.piece_ld
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 34%;
+    height: 49%;
+    float: left;
+    background-position: -5% 33.2%;
+}
+.piece_ld-hover
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 34%;
+    height: 49%;
+    float: left;
+    background-position: -6% 100%;
+}
+.piece_stop
+{
+   background: url(../img/direction.png) no-repeat;
+    width: 30.5%;
+    height: 33%;
+    float: left;
+    margin-top: -17%;
+    background-position: 45.622% 20%;
+}
+.piece_stop-hover
+{
+   background: url(../img/direction.png) no-repeat;
+    width: 30.5%;
+    height: 33%;
+    float: left;
+    margin-top: -17%;
+    background-position: 45.622% 80%;
+}
+.piece_d
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 31%;
+    height: 32%;
+    float: left;
+    margin-top: 17%;
+    margin-left: -31%;
+    background-position: 45% 40.2%;
+}
+.piece_d-hover
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 31%;
+    height: 32%;
+    float: left;
+    margin-top: 17%;
+    margin-left: -31%;
+    background-position: 45% 100%;
+}
+.piece_rd
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 33%;
+    height: 49%;
+    float: left;
+    background-position: 94% 33%;
+}
+.piece_rd-hover
+{
+    background: url(../img/direction.png) no-repeat;
+    width: 33%;
+    height: 49%;
+    float: left;
+    background-position: 94% 99.5%;
+}

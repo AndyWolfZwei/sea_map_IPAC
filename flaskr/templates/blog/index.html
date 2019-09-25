@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>导航系统</title>
+{#    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css" />#}
+
+    <script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <script src='http://requirejs.org/docs/release/2.3.6/minified/require.js'></script>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script type="text/javascript" src='http://webapi.amap.com/maps?v=1.4.8&key=8554fbba3ce0fa134885a4b1131e2bbc&plugin=AMap.RectangleEditor'></script>
+
+    <!-- socket io -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket;
+        $(document).ready(function(){
+            socket = io.connect('http://' + document.domain + ':' + location.port + '/blog');
+            console.log(socket.id);
+            socket.on('connect', function() {
+                alert(123);
+                socket.emit('joined', {});
+            });
+            socket.on('status', function(data) {
+                $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('message', function(data) {
+                $('#chat').val($('#chat').val() + data.msg + '\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+        });
+    </script>
+    <!-- UI组件库 1.0 -->
+    <script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/zzsc-demo.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/arrow.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/index_float.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gauge.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <style type="text/css">
+    #ShowPath,#DrawPath,#PlanPath,#ConPath  {
+        width: 1760px;
+        height: 850px;
+        margin-left: 10px;
+    }
+    #sel{
+        {#text-align:center;#}
+        padding-left:110px;
+        width:300px;
+    }
+    body {
+        margin: 0;
+        background-color: #66677c;
+    }
+    .input-radio {
+        width: 260px;
+        height: 21px;
+        margin:20px auto;
+        position: relative;
+        z-index: 999;
+        {#left: 930px;#}
+        {#top: 10px;#}
+        background-color: #FFF;
+        background-clip: border-box;
+        border-radius: 0.6rem;
+        padding-left: 14px;
+    }
+    .state {
+    	width: 300px;
+		{#height: 300px;#}
+		margin-left: 40px;
+		margin-top: 30px;
+    }
+    .dropdown {
+		height: 45px;
+		margin-left: 50px;
+		margin-top: 20px;
+    }
+    .text-center {
+    	height: 20px;
+    	margin-top: 20px;
+    }
+	#RealTimeSetting{
+		margin-top:25px;
+		height:20px;
+	}
+    #user-name{
+        float:right;
+        padding-right: 100px;
+        {#margin-left:10px;#}
+    }
+    #RealTimePic {
+    	width: 500px;
+    	height:308px;
+		margin-left: 110px;
+		margin-top: 37px;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">
+				IPAC环境感知与控制平台
+			</h2>
+                <div id="user-name">
+                <ul>
+                <li><span> welcome, <a href="#">{{ g.user['username'] }}</a>,</span> <li><a href="{{ url_for('auth.logout') }}">登出</a>
+                </ul>
+            </div>
+                <div class="tabbable" id="tabs-20089">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active show" href="#ShowPath" data-toggle="tab">轨迹展示</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#DrawPath" data-toggle="tab">地图选点</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#PlanPath" data-toggle="tab">自动规划</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#ConPath" data-toggle="tab">单步控制</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="aaa">
+                <div class="tab-content">
+                    <div class="tab-pane active show" id="ShowPath">
+                    </div>
+                    <div class="tab-pane" id="DrawPath">
+                        <div class="input-card" style="width: 120px;position:absolute;z-index:999;">
+                        <button class="btn" onclick="start_edit()" style="margin-bottom: 5px">开始编辑</button>
+                        <button class="btn" onclick="end_edit()" style="margin-bottom: 5px">结束编辑</button>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="PlanPath">
+                        <div class="input-radio" >
+                            <input type="radio" name='func' value='row' checked>水平
+                            <input type="radio" name='func' value='col'>垂直
+                            <input type="radio" name='func' value='tilt row'>45°水平
+                            <input type="radio" name='func' value='tilt col'>45°垂直
+                        </div>
+                        <div class="input-card" style="width: 120px;position:absolute;z-index:999;">
+                        <button class="btn" onclick="rectangleEditor.open()" style="margin-bottom: 5px">开始编辑</button>
+                        <button class="btn" onclick="rectangleEditor.close()" style="margin-bottom: 5px">结束编辑</button>
+                        <button class="btn" onclick="gen_path()" style="margin-bottom: 5px">生成路径</button>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="ConPath">
+                    </div>
+                </div>
+            </div>
+        <div class="box">
+            <div class="change-type">
+{#            one#}
+                <div class="type-left">
+                    <ul>
+                        <li class="active">
+                            <div class="ok">
+                                <div class="dropdown">
+                                    <select id='sel' onchange="ajaxForm()" name="select_path">
+                                    <option value="none">选择航迹</option>
+                                    {% for i in range(transfer_num) %}
+                                    <option value={{ i }}>航迹{{ i }}</option>
+                                    {% endfor %}
+                                    </select>
+
+                                    <script type="text/javascript">
+                                        function ajaxForm(){
+                                            var objS = document.getElementById("sel");
+                                            var value = objS.options[objS.selectedIndex].value;
+                                            if (window.pathSimplifierIns) {
+                                                pathSimplifierIns.setData([]);
+                                                console.log('reset done');
+                                            }
+                                            $.ajax({
+                                            url:"{{ url_for('blog.get_lite_data') }}",
+                                            data:{"value": value},
+                                            dataType: 'json',
+                                            success:function(data){
+                                                plot_path1(data);
+                                                },
+                                            });
+                                        }
+                                        </script>
+                                </div>
+                                <div class="state">
+                                        <canvas data-type="radial-gauge"
+                                            data-width="300"
+                                            data-height="300"
+                                            data-units="Km/h"
+                                            data-title="false"
+                                            data-min-value="10"
+                                            data-max-value="210"
+                                            data-value="33.77"
+                                            data-animate-on-init="true"
+                                            data-major-ticks="10,30,50,70,90,110,130,150,170,190,210"
+                                            data-minor-ticks="2"
+                                            data-stroke-ticks="true"
+                                            data-highlights='[{"from": 160, "to": 210, "color": "rgba(200, 50, 50, .75)"}]'
+                                            data-color-plate="#222"
+                                            data-color-major-ticks="#f5f5f5"
+                                            data-color-minor-ticks="#ddd"
+                                            data-color-title="#fff"
+                                            data-color-units="#ccc"
+                                            data-color-numbers="#eee"
+                                            data-color-needle-start="rgba(240, 128, 128, 1)"
+                                            data-color-needle-end="rgba(255, 160, 122, .9)"
+                                            data-value-box="true"
+                                            data-font-value="Led"
+                                            data-font-numbers="Led"
+                                            data-animated-value="true"
+                                            data-borders="false"
+                                            data-border-shadow-width="0"
+                                            data-needle-type="arrow"
+                                            data-needle-width="2"
+                                            data-needle-circle-size="7"
+                                            data-needle-circle-outer="true"
+                                            data-needle-circle-inner="false"
+                                            data-animation-duration="1500"
+                                            data-animation-rule="linear"
+                                            data-ticks-angle="250"
+                                            data-start-angle="55"
+                                            data-color-needle-shadow-down="#333"
+                                            data-value-box-width="45"
+                                        ></canvas>
+                                        <canvas  data-type="radial-gauge"
+                                             data-min-value="0"
+                                             data-max-value="360"
+                                             data-major-ticks="N,NE,E,SE,S,SW,W,NW,N"
+                                             data-minor-ticks="22"
+                                             data-ticks-angle="360"
+                                             data-start-angle="180"
+                                             data-stroke-ticks="false"
+                                             data-highlights="false"
+                                             data-color-plate="#222"
+                                             data-color-major-ticks="#f5f5f5"
+                                             data-color-minor-ticks="#ddd"
+                                             data-color-numbers="#ccc"
+                                             data-color-needle="rgba(240, 128, 128, 1)"
+                                             data-color-needle-end="rgba(255, 160, 122, .9)"
+                                             data-value-box="false"
+                                             data-value-text-shadow="false"
+                                             data-color-circle-inner="#fff"
+                                             data-color-needle-circle-outer="#ccc"
+                                             data-needle-circle-size="15"
+                                             data-needle-circle-outer="false"
+                                             data-needle-type="line"
+                                             data-needle-start="75"
+                                             data-needle-end="99"
+                                             data-needle-width="3"
+                                             data-borders="true"
+                                             data-border-inner-width="0"
+                                             data-border-middle-width="0"
+                                             data-border-outer-width="10"
+                                             data-color-border-outer="#ccc"
+                                             data-color-border-outer-end="#ccc"
+                                             data-color-needle-shadow-down="#222"
+                                             data-animation-target="plate"
+                                             data-animation-duration="1500"
+                                             data-animation-rule="linear"
+                                             data-width="300"
+                                             data-height="300"
+                                             data-units="ᵍ"
+                                             data-value="0"
+                                        ></canvas>
+                                    <div id="info"><table>
+                                        <tr><tbody>
+                                            <td>
+                                              <label for="lon">经度：</label>
+                                              <input id="lon" placeholder="121.443437" readonly="readonly" type="text">
+                                            </td>
+                                            <td>
+                                             <label for="lat">纬度：</label>
+                                             <input id="lat" placeholder="31.025954" readonly="readonly" type="text">
+                                            </td>
+                                        </tbody></tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="type-right">
+                    <script>
+                        $(function(){
+                            $('.type-right').click(function(){
+                                $(this).prev('.type-left').toggleClass('showListType')
+                            });
+                        })
+                    </script>
+                    <p>详细信息</p>
+                </div>
+{#            two#}
+            </div>
+            <div class="change-type1">
+                <div class="type-control-left">
+                    <ul>
+                        <li class="active" style="height:800px">
+                            <div class="ok">
+                                <div class="dropdown">
+                                    <select id='sel' onchange="ajaxForm()" name="select_path">
+                                    <option value="none">选择航迹</option>
+                                    {% for i in range(transfer_num) %}
+                                    <option value={{ i }}>航迹{{ i }}</option>
+                                    {% endfor %}
+                                    </select>
+
+                                    <script type="text/javascript">
+                                        function ajaxForm(){
+                                            var objS = document.getElementById("sel");
+                                            var value = objS.options[objS.selectedIndex].value;
+                                            if (window.pathSimplifierIns) {
+                                                pathSimplifierIns.setData([]);
+                                                console.log('reset done');
+                                            }
+                                            $.ajax({
+                                            url:"{{ url_for('blog.get_lite_data') }}",
+                                            data:{"value": value},
+                                            dataType: 'json',
+                                            success:function(data){
+                                                plot_path1(data);
+                                                },
+                                            });
+                                        }
+                                        </script>
+                                <div class="director">
+                               <div class="piece_lu" id="piece_lu"></div>
+                               <div class="piece_u" id="piece_u"></div>
+                               <div class="piece_ru" id="piece_ru"></div>
+                               <div class="piece_ld" id="piece_ld"></div>
+                               <div class="piece_stop" id="piece_stop"></div>
+                               <div class="piece_d" id="piece_d"></div>
+                               <div class="piece_rd" id="piece_rd"></div>
+                              </div>
+
+                                <div id="info" style="margin-top:320px">
+
+                                </div>
+
+                                <div class="show_info">
+                                 <table>
+                                     <tbody><tr>
+                                         <td colspan="2">
+                                             <label for="lon">当前设备：</label>
+                                             <input type="text" id="currdev" title="请选择设备" data-type="0">
+{#                                             <input type="text" id="devstate" title="请选择设备">#}
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2">
+                                             <label style="word-wrap:break-word">速度控制：</label>
+                                             <input type="text" id="ex1SliderVal" readonly="readonly" style="width: 145px; color: rgb(0, 0, 0);margin-left:10px" value="0">
+                                             <button type="button" id="btn_speedctl" style="width:75px;margin-left:10px" onclick="btnclick_speedctl()">发送</button>
+                                         </td>
+
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2">
+                                             <label style="word-wrap:break-word">方向控制：</label>
+                                            <input type="text" id="ex1SliderVal" readonly="readonly" style="width: 145px; color: rgb(0, 0, 0);margin-left:10px" value="0">
+                                             <button type="button" id="btn_speedctl" style="width:75px;margin-left:10px" onclick="btnclick_speedctl()">发送</button>
+                                         </td>
+
+                                     </tr>
+                                    <tr>
+                                        <td>
+                                          <label for="lon">经度：</label><input type="text" id="lon" placeholder="000" readonly="readonly">
+                                        </td>
+                                        <td>
+                                         <label for="lat">纬度：</label><input type="text" id="lat" placeholder="000" readonly="readonly">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                          <label for="dir">方向：</label><input type="text" id="dir" placeholder="000" readonly="readonly">
+                                        </td>
+                                        <td>
+                                         <label for="speed">速度：</label><input type="text" id="speed" placeholder="000" readonly="readonly">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                       <td colspan="2">
+                                        <label for="order" id="">当前命令：</label><input type="text" id="order" placeholder="无命令" value="" readonly="readonly">
+                                       </td>
+                                    </tr>
+                                 </tbody></table>
+                                </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="type-control">
+                    <script>
+                        $(function(){
+                            $('.type-control').click(function(){
+                                $(this).prev('.type-control-left').toggleClass('showListType-control')
+                            });
+                        })
+                    </script>
+                    <p>控制菜单</p>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <address>
+                    <strong>上海交通大学电信学院二号楼205-207</strong>
+                    <br> 上海交通大学信息处理与先进控制研究室
+                    <br>
+                    <abbr title="Phone">P:</abbr> 021-34204021
+                </address>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/data.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='js/ajax_f.js') }}"></script>#}
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/drawpath.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/planpath.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/controlpath.js') }}"></script>
+</body>
+
+</html>

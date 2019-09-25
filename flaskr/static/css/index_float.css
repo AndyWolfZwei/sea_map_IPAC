@@ -1,0 +1,90 @@
+*{margin: 0;padding: 0;}
+.box{margin: 0 40px; position: relative;}
+.change-type {
+    /*width:50px;*/
+    min-height: 160px;
+    position: absolute;
+    right: 0px;
+    top: 0;
+    display: flex;
+}
+
+.change-type .type-left {
+    width: 0;
+    background: #66677c;
+    height: 100%;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
+    border-bottom-left-radius: 5px;
+    overflow: hidden;
+    transition: width 0.4s;
+    -moz-transition: width 0.4s;
+    -webkit-transition: width 0.4s;
+    -o-transition: width 0.4s;
+}
+.change-type .showListType {
+    width: 375px;
+    transition: width 0.4s;
+    -moz-transition: width 0.4s;
+    -webkit-transition: width 0.4s;
+    -o-transition: width 0.4s;
+}
+
+.change-type .type-right {
+    width: 40px;
+    background: #66677c;
+    z-index: 99;
+    /*height: 150px;*/
+    overflow: hidden;
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: table;
+}
+
+.change-type1 {
+    /*width:50px;*/
+    min-height: 160px;
+    position: absolute;
+
+    right: 0;
+    top: 0;
+    display: flex;
+}
+
+.change-type1 .type-control {
+    width: 40px;
+    background: #66677c;
+    z-index: 98;
+    /*height: 150px;*/
+    overflow: hidden;
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: table;
+    position:relative;
+    left:0px;
+    top:50px;
+}
+
+.change-type1 .type-control-left {
+    width: 0;
+    margin-right:0;
+    background: #66677c;;
+    height: 100%;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
+    border-bottom-left-radius: 5px;
+    overflow: hidden;
+    transition: width 0.4s;
+    -moz-transition: width 0.4s;
+    -webkit-transition: width 0.4s;
+    -o-transition: width 0.4s;
+}
+
+.change-type1 .showListType-control {
+    /*margin-right:40px;*/
+    width: 375px;
+    transition: width 0.4s;
+    -moz-transition: width 0.4s;
+    -webkit-transition: width 0.4s;
+    -o-transition: width 0.4s;
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆页面</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/style_svg.css') }}" rel="stylesheet">
+    <script type="text/javascript">
+        $(function(){
+            $(".name input").focus(function(){
+                $(this).prev("i").css({"background-image":"url(../../static/img/user2.png)"});
+            });
+            $(".name input").blur(function(){
+                $(this).prev("i").css({"background-image":"url(../../static/img/user1.png)"});
+            });
+            $(".password input").focus(function(){
+                $(this).prev("i").css({"background-image":"url(../../static/img/password2.png)"});
+            });
+            $(".password input").blur(function(){
+                $(this).prev("i").css({"background-image":"url(../../static/img/password1.png)"});
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="wrap">
+            <header><div id="id1" style="width:1000px;">
+
+                <div id="logo"><img src="../../static/img/logo.png"  alt="SJTU-logo"/></div>
+                <div id="title">信息处理与先进控制研究室</div>
+                <div id="id4" style="clear:both"></div>
+            </div>
+            </header>
+            <article>
+                <section>
+                    <aside style="width: 350px;">
+                        <em>
+                            <img src="../../static/img/user.png">
+                        </em>
+                         <form action="" method="post">
+                            <p class="name"><i></i><input type="text" name="userName" class="userName" placeholder="请输入用户名" id="userName" required></p>
+                            <p class="password"><i></i><input type="password" name="password" class="pwd" placeholder="请输入密码" id="password" required></p>
+                            <button>登录</button>
+                            <p class="remember"> <input type="checkbox" name="remember1" > 记住密码</p>
+
+                            <p class="register" style="justify-content:space-between">没有账号?  <a href={{  url_for("auth.register") }}>立即注册</a></p>
+                             <p style="text-align: justify; color:#ff0711;">{{ get_flashed_messages()[0] }}</p>
+                            <div class="clear"></div>
+                        </form>
+                    </aside>
+                   
+                </section>               
+            </article>
+            <footer>
+{#            <ul>#}
+{#                <li style="border-left: 1px solid rgb(165, 161, 161)"><a href="http://automation.sjtu.edu.cn/wdzhang/projects.pdf">关于我们</a></li>#}
+{#                <li><a href="http://automation.sjtu.edu.cn/ipac/news/detail.php?recordID=285">博后招聘</a></li>#}
+{#                <li><a href="http://automation.sjtu.edu.cn/ipac/member/PhD.php">梯队成员</a></li>#}
+{#                <li><a href="http://automation.sjtu.edu.cn/wdzhang/">友情链接</a></li>#}
+{#            </ul>#}
+{#                <p>本网站版权归信息处理与先进控制研究室所有，未经许可，不得转载。</p>#}
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

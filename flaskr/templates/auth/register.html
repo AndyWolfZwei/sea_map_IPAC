@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regist.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <article>
+            <h1><span>信息处理与先进控制研究室</span></h1>
+            <div class="main">
+                <form method="post">
+                    <div class="tel">
+                        <input type="tel" name="phone" placeholder="手机号"><em>手机号由11个字符组成！</em>
+                    </div>
+                    <div class="userName">
+                        <input type="text" name="userName" placeholder="用户名"><em>用户名由5-8个字符组成！</em>
+                    </div>
+                    <div class="password">
+                        <input type="password" name="pwd" placeholder="密码"><em>密码使用字母、数字、符号两种及以上的组合，8-12个字符</em>
+                    </div>
+                    <div class="againpwd">
+                        <input type="password" name="pwd" placeholder="再次输入密码"><em>   </em>
+                    </div>
+                    <button>注册</button>
+                </form>
+            </div>
+        </article>
+        <footer>
+{#            <ul>#}
+{#                <li style="border-left: 1px solid rgb(165, 161, 161)"><a href="http://automation.sjtu.edu.cn/wdzhang/projects.pdf">关于我们</a></li>#}
+{#                <li>#}
+{#                    <button type="button" id="crawle" class="button button-primary button-small btnjs">关于我们</button>#}
+{#                    <a href="#" type="button" >#}
+{#                <script>#}
+{#                $(".btnjs").click(function(){#}
+{#                $(".dialog").show(200)#}
+{#                })#}
+{#                </script>#}
+{#                </a></li>#}
+{#                <li><a href="http://automation.sjtu.edu.cn/ipac/news/detail.php?recordID=285">博后招聘</a></li>#}
+{#                <li><a href="http://automation.sjtu.edu.cn/ipac/member/PhD.php">梯队成员</a></li>#}
+{#                <li><a href="http://automation.sjtu.edu.cn/wdzhang/">友情链接</a></li>#}
+{#            </ul>#}
+{#            <p>本网站版权归信息处理与先进控制研究室所有，未经许可，不得转载。</p>#}
+        </footer>
+    </div>
+</body>
+</html>
